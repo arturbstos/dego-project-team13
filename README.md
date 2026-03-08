@@ -69,42 +69,39 @@ Furthermore, sensitive spending categories such as Gambling, Adult Entertainment
 
 
 ## Privacy and Governance
-There are several types of personally identifiable information present in the dataset, which were classified into three tiers: direct identifiers (full_name, email, ssn, ip_address), indirect or special identifiers (spending_behavior, gender, date_of_birth, zip_code), and financial personal data (credit_history_months, debt_to_income, savings_balance). This demonstrates the need for privacy and proper data governance.
-To show the effectiveness of data privacy, we have used the pseudonymization technique on the data. SHA-256 hashing was applied to the full_name, email, and ssn fields, replacing the original values while maintaining referential integrity for audit purposes. Additionally, the ip_address and spending_behavior columns were fully removed to demonstrate data minimisation. This is demonstrated in *04-privacy-demonstration.ipynb*.
+There are several types of personally identifiable information present in the dataset, which were classified into three tiers: direct identifiers (full_name, email, ssn, ip_address), indirect identifiers (spending_behavior, gender, date_of_birth, zip_code), and financial personal data (credit_history_months, debt_to_income, savings_balance, annual_salary). This demonstrates the need for privacy and proper data governance.
 
-Regarding the data governance, the results emphasize the need for robust data validation, data protection, and the development of audit trails for automated credit approvals. Specific GDPR concerns identified include the absence of a documented lawful basis for data collection (Art. 6), no right-to-erasure mechanism (Art. 17), and the risk of opaque automated decision-making given that over 80% of rejections were attributed to an algorithm_risk_score with no meaningful explanation (Art. 22). Moreover, monitoring fairness metrics and data governance policies can also ensure data governance regulations like GDPR and EU AI Act are followed.
+To show the effectiveness of data privacy, we demonstrated pseudonymization, anonymization and data minimization techniques. SHA-256 hashing was applied to full_name, email, ssn, and ip_address, with ip_address also being removed afterwards. The date_of_birth field was generalized into age and the original column dropped. The spending_behavior field was fully removed as an additional minimization step. 
+All of these steps are grounded in GDPR Art. 5(1)(c), which requires that personal data be adequate, relevant, and limited to what is necessary. This is demonstrated in *04-privacy-demonstration.ipynb*.
+
+Regarding data governance, several compliance gaps were identified. There is no documented lawful basis for the collection and use of personal data (GDPR Arts. 6 and 13), and no data retention policy defining how long each data type is kept or when it should be deleted or anonymized (GDPR Arts. 5(1)(e) and 17). Access to direct identifiers is not restricted, meaning analysts work with raw personal data rather than pseudonymized datasets (GDPR Arts. 5(1)(f) and 32). 
+Finally, over 80% of rejections are attributed to an opaque algorithm_risk_score with no meaningful explanation provided to applicants, raising concerns under GDPR Art. 5(2) and AI Act Arts. 11–12 on accountability and documentation.
 
 ## Governance Recommendations
 Based on the findings of the analysis, the following governance recommendations are proposed for NovaCred:
 
-### 1. Data Validation Pipeline
-Enforce schema types, date format standards, and categorical value constraints at data ingestion. Automated anomaly alerts should be implemented for future data loads to prevent the issues identified in this analysis from recurring.
+**1. Audit Trails** — Record every credit decision with timestamp, model version, inputs used, outcome, and whether a human changed or confirmed the outcome (GDPR Art. 5(2); AI Act Arts. 11–12).
 
-### 2. Fairness Monitoring 
-Compute the Disparate Impact ratio on every model retrain and trigger a manual review whenever Disparate Impact falls below 0.8. Monitoring should also cover intersectional effects such as gender combined with age, as the analysis revealed compounding disparities across these groups.
+**2. Human Oversight** — The model should support, not replace, human decision-making, reducing the risk of unfair automated decisions (AI Act Art. 14).
 
-### 3. Proxy Attribute Audit
-Remove or control the zip_code variable from model features, given its strong correlation with gender (r = -0.806). 
-All geographic and spending-related variables should be evaluated for protected-characteristic correlation before being included in model training. Sensitive spending categories (Gambling, Adult Entertainment, Alcohol) should be explicitly excluded per EU AI Act Art. 10.
+**3. Lawful Basis** — Document why each category of personal data is collected and used, and inform applicants about data use, purpose, and retention (GDPR Arts. 6 and 13).
 
-### 4. Privacy-by-Design
-Pseudonymise all Personally Identifiable Information fields at rest using strong hashing algorithms. Implement consent tracking, data retention schedules, and GDPR Art. 17 erasure workflows across all systems handling applicant data.
+**4. Data Retention Policy** — Set retention periods for each data type and delete or anonymize identifiers when no longer needed (GDPR Arts. 5(1)(e) and 17).
 
-### 5. Audit Trail and Explainability
-Log all automated credit decisions with the model version, input features used, and outcome. Replace opaque algorithm_risk_score rejections with meaningful, human-readable explanations, and implement human review escalation for borderline cases as required by EU AI Act Art. 14.
+**5. Access Control** — Restrict direct identifiers to authorized staff only. Analysts and data scientists should work mainly with pseudonymized datasets, not raw personal data (GDPR Arts. 5(1)(f) and 32).
 
-### 6. Model Governance Board
-Establish a governance board responsible for quarterly fairness reporting to senior management, a documented approval process before any credit model goes live, and role-based data access controls to limit exposure of sensitive applicant information.
+**6. Data and Model Review** — Review each variable before use in analysis or modeling, checking necessity, justification, and proxy risk (GDPR Art. 5(1)(c); AI Act Arts. 9–10).
 
-### Technologies used
-Python was used as the programming language, and the required calculations were done with the help of Pandas, NumPy, Matplotlib, and Seaborn libraries, running on the Jupyter Notebook.
+## Technologies used
+Python was used as the programming language, and the required calculations were done with the help of Pandas, NumPy, Matplotlib, and Seaborn libraries, running on the Jupyter Notebook. MongoDB was used as the database to store and query the credit application records.
 
 ## Running the Project
 To reproduce the analysis, install the required dependencies:
-pip install pandas numpy matplotlib seaborn
-
+```
+pip install pandas numpy matplotlib seaborn pymongo
+```
 Then run the notebooks in the following order:
-01-data-quality.ipynb
-02-bias-analysis.ipynb
-03-proxy-analysis.ipynb
-04-privacy-demonstration.ipynb
+* 01-data-quality.ipynb
+* 02-bias-analysis.ipynb
+* 03-proxy-analysis.ipynb
+* 04-privacy-demonstration.ipynb
