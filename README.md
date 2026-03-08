@@ -1,10 +1,10 @@
 # DEGO Project- Team 13
 
 ## Team Members
-* Ana Reis (Student_Id: 70047)
-* Artur Bastos (Student_Id: 52011)
-* Sara Martins Fernandes (Student_Id: 51489)
-* Vanessa Weiss (Student_Id: 73217)
+* Ana Reis (Student_Id: 70047) - Governance Officer
+* Artur Bastos (Student_Id: 52011) - Data Engineer
+* Sara Martins Fernandes (Student_Id: 51489) - Product Lead
+* Vanessa Weiss (Student_Id: 73217) - Data Scientist
 
 
 ## Project Description
