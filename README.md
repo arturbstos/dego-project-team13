@@ -105,3 +105,7 @@ Then run the notebooks in the following order:
 * 02-bias-analysis.ipynb
 * 03-proxy-analysis.ipynb
 * 04-privacy-demonstration.ipynb
+
+
+## Video Presentation
+https://www.youtube.com/watch?v=FrWYiPiYawU
