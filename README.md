@@ -14,6 +14,7 @@ The goal was to analyse the provided dataset of credit applications in order to 
 Additionaly, it was proposed a set of governance recommendations that could help improve the reliability, transparency, and regulatory compliance of NovaCred's data practices.
 
 ## Structure
+```
 project-team13/
 │
 ├── data/  #contains the datasets used in this project
@@ -30,6 +31,7 @@ project-team13/
 │
 ├── README.md
 └── LICENSE
+```
 
 ## Dataset Description
 The dataset consists of credit loan applications stored in nested JSON format.
